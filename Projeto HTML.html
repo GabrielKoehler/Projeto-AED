@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+		<!--Importa o JQuery -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>	
+		<script type="text/javascript">
+		
+		var x=960;
+		var y=670;
+		var ctx;
+		var crw;
+		var lcr;
+		var acr;
+		var blq = [[0,0,1200,45],[0,150,160,600],[265,150,430,515],[695,150,185,440],[885,150,35,510],[0,-45,1200,30]];
+		
+		function desenha_carro(){
+		    
+		    var carro=new Image();
+			carro.src=crw;
+			ctx.drawImage(carro, x, y,lcr,acr);
+		}
+		
+		
+		function desenha_cenario(){
+		
+		    var cenario=new Image();
+            cenario.src="cenario.png";
+			ctx.drawImage(cenario, 0, 0,1024,768)
+		}
+		
+		function inicia_jogo(){
+		    var c=$("#cnv01").get(0);
+			ctx=c.getContext("2d");
+			ctx.fillStyle = "#00FF00";
+			ctx.fillRect(x,y,1024,768);
+			desenha_carro();
+			document.addEventListener("keydown",movimentar_carro, false);
+		}
+		
+		
+		function movimentar_carro(evento){
+		    var bx, by;
+			bx=x;
+			by=y;
+		    var tecla = evento.keyCode;
+			ctx.fillStyle = "#00FF00";
+			ctx.fillRect(x,y,lcr,acr);
+			switch(tecla){
+			    case 38:
+				//CIMA
+				//Se o código é 38 então a tecla pressionada foi a seta para cima
+			    //Diminui a coordenada y em 1 pixels
+			        y=y-5;
+					crw="carro_up.png"
+					acr=36;
+					lcr=18;
+					
+					
+			    break;
+                case 37:
+				//ESQUERDA
+                //Se o código é 37 então a tecla pressionada foi a seta para esquerda
+				//Diminui a coordenada x em 1 pixels		
+                    x=x-5;
+					crw="carro_left.png"
+					acr=18;
+					lcr=36;
+                break;
+				case 39:
+				//DIREITA
+                //Se o código é 39 então a tecla pressionada foi a seta para direita
+				//Aumenta a coordenada x em 1 pixels		
+					x=x+5;
+					crw="carro_right.png"
+					acr=18;
+					lcr=36;
+				break;
+                case 40:
+				//BAIXO
+                //Se o código é 40 então a tecla pressionada foi a seta para baixo
+				//Diminui a coordenada y em 1 pixels
+                    y=y+5;
+					crw="carro_down.png"
+					acr=36;
+					lcr=18;
+				break; 
+				}
+		 
+                    var i;
+					for(i=0;i<=4;i++){
+					    if(x<blq[i][0]+blq[i][2] && x+lcr>blq[i][0] && y<blq[i][1]+blq[i][3] && y+acr>blq[i][1]){
+					        x=bx;
+					        y=by;				
+					    }
+					}
+			//Invoca a função para desenhar o carro nas novas coordenadas
+			$("#pos").val(""+x+"-"+y);
+			desenha_cenario();
+		    desenha_carro();
+			
+		}
+	</script>
+	</head>
+	<body onload="inicia_jogo();">
+		<!--Cria o canvas que é a área que utilizaremos para realizar os desenhos -->
+		<canvas id="cnv01" width="1024" height="768" background-color="#00FF00">
+			Navegador sem suporte
+		</canvas>
+		<input type="text" id="pos">
+	</body>
+</html>		
